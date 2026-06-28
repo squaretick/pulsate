@@ -7,14 +7,19 @@
 //! `ResolvesServerCert`, so it slots straight into a server config), and an
 //! [`OnDemandPolicy`] allow-list gating on-demand issuance.
 //!
-//! Live issuance against a CA is not wired up.
+//! Live issuance against a CA is being wired up incrementally; the JOSE/account
+//! layer ([`AccountKey`]) is implemented (see the `jose` module).
 #![forbid(unsafe_code)]
+
+mod jose;
 
 use std::collections::{HashMap, HashSet};
 use std::sync::{Arc, Mutex};
 
 use rustls::server::{ClientHello, ResolvesServerCert};
 use rustls::sign::CertifiedKey;
+
+pub use jose::{AccountKey, Jwk, KeyId};
 
 /// The well-known path prefix for HTTP-01 challenge responses.
 pub const HTTP01_PREFIX: &str = "/.well-known/acme-challenge/";

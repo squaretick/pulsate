@@ -18,7 +18,7 @@
 
 ## License recommendation
 
-**Recommended: Apache License 2.0** for the entire open-source core (all crates in the workspace, [03. Repository](03-repository.md)).
+**License: Apache License 2.0** for the entire open-source core (all crates in the workspace, [03. Repository](03-repository.md)).
 
 Rationale:
 - **Permissive adoption.** Apache-2.0 lets companies use, embed, and ship Pulsate without copyleft friction — essential for an infrastructure component people put in their critical path.

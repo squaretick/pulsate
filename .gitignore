@@ -2,3 +2,6 @@
 **/*.rs.bk
 *.pdb
 .DS_Store
+
+# Internal delivery roadmap (not shipped)
+docs/ROADMAP.md
