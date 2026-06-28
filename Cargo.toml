@@ -1,7 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/p8",
+    "crates/pulsate",
     "crates/pulsate-core",
     "crates/pulsate-rt",
     "crates/pulsate-util",

@@ -16,7 +16,7 @@ scales, unchanged in shape, to a multi-site deployment.
 ## Install
 
 ```sh
-cargo install p8        # installs two identical binaries: `p8` and `pulsate`
+cargo install pulsate   # installs two identical binaries: `pulsate` and the short alias `p8`
 ```
 
 Or build from source (Rust 1.86+):
@@ -28,8 +28,8 @@ cargo build --release
 ## Quick start
 
 ```sh
-# Validate a config, then serve it.
-p8 validate examples/spa-api.flow
+# Validate a config, then serve it. `p8` is a shorter alias for `pulsate`.
+pulsate validate examples/spa-api.flow
 p8 up examples/static.flow --listen 127.0.0.1:8080
 ```
 

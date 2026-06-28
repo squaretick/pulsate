@@ -64,7 +64,9 @@ pub fn validate(path: &Path) -> Outcome {
     let name = path.display().to_string();
     let text = match std::fs::read_to_string(path) {
         Ok(t) => t,
-        Err(e) => return Outcome::fail(exit::RUNTIME, format!("p8: cannot read {name}: {e}\n")),
+        Err(e) => {
+            return Outcome::fail(exit::RUNTIME, format!("pulsate: cannot read {name}: {e}\n"))
+        }
     };
     validate_text(&name, &text)
 }
@@ -111,7 +113,7 @@ pub fn import_config(format: &str, path: &Path) -> Outcome {
     let Some(source) = pulsate_migrate::Source::parse(format) else {
         return Outcome::fail(
             exit::RUNTIME,
-            format!("p8: unknown import format {format:?} (use nginx or caddy)\n"),
+            format!("pulsate: unknown import format {format:?} (use nginx or caddy)\n"),
         );
     };
     let text = match std::fs::read_to_string(path) {
@@ -119,7 +121,7 @@ pub fn import_config(format: &str, path: &Path) -> Outcome {
         Err(e) => {
             return Outcome::fail(
                 exit::RUNTIME,
-                format!("p8: cannot read {}: {e}\n", path.display()),
+                format!("pulsate: cannot read {}: {e}\n", path.display()),
             )
         }
     };
@@ -147,15 +149,17 @@ pub fn plugin_run(path: &Path, input: i32) -> Outcome {
     let name = path.display().to_string();
     let bytes = match std::fs::read(path) {
         Ok(b) => b,
-        Err(e) => return Outcome::fail(exit::RUNTIME, format!("p8: cannot read {name}: {e}\n")),
+        Err(e) => {
+            return Outcome::fail(exit::RUNTIME, format!("pulsate: cannot read {name}: {e}\n"))
+        }
     };
     let host = match pulsate_plugin::PluginHost::new() {
         Ok(h) => h,
-        Err(e) => return Outcome::fail(exit::RUNTIME, format!("p8: {e}\n")),
+        Err(e) => return Outcome::fail(exit::RUNTIME, format!("pulsate: {e}\n")),
     };
     let plugin = match host.load(&name, &bytes) {
         Ok(p) => p,
-        Err(e) => return Outcome::fail(exit::RUNTIME, format!("p8: {e}\n")),
+        Err(e) => return Outcome::fail(exit::RUNTIME, format!("pulsate: {e}\n")),
     };
     let caps = pulsate_plugin::Capabilities { log: true };
     match host.run(&plugin, caps, 10_000_000, input) {
@@ -165,7 +169,7 @@ pub fn plugin_run(path: &Path, input: i32) -> Outcome {
             r.fuel_used,
             r.logs.len()
         )),
-        Err(e) => Outcome::fail(exit::RUNTIME, format!("p8: {e}\n")),
+        Err(e) => Outcome::fail(exit::RUNTIME, format!("pulsate: {e}\n")),
     }
 }
 
@@ -175,7 +179,9 @@ pub fn config_dump(path: &Path) -> Outcome {
     let name = path.display().to_string();
     let text = match std::fs::read_to_string(path) {
         Ok(t) => t,
-        Err(e) => return Outcome::fail(exit::RUNTIME, format!("p8: cannot read {name}: {e}\n")),
+        Err(e) => {
+            return Outcome::fail(exit::RUNTIME, format!("pulsate: cannot read {name}: {e}\n"))
+        }
     };
     match ConfigStore::load(&name, &text) {
         Ok(store) => Outcome::ok(format!("{:#?}\n", store.current().config)),

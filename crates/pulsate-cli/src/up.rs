@@ -57,7 +57,7 @@ pub async fn up(opts: UpOptions) -> u8 {
     let text = match std::fs::read_to_string(&opts.config) {
         Ok(t) => t,
         Err(e) => {
-            eprintln!("p8: cannot read {name}: {e}");
+            eprintln!("pulsate: cannot read {name}: {e}");
             return crate::exit::RUNTIME;
         }
     };
@@ -101,12 +101,12 @@ pub async fn up(opts: UpOptions) -> u8 {
     if let Some(addr) = opts.metrics {
         match pulsate_net::bind(addr) {
             Ok(listener) => {
-                println!("p8: metrics on http://{addr}/metrics");
+                println!("pulsate: metrics on http://{addr}/metrics");
                 let telemetry = Arc::clone(&gateway.telemetry);
                 let rx = lifecycle_rx.clone();
                 tasks.push(tokio::spawn(serve_metrics(listener, telemetry, rx)));
             }
-            Err(e) => eprintln!("p8: cannot bind metrics {addr}: {e}"),
+            Err(e) => eprintln!("pulsate: cannot bind metrics {addr}: {e}"),
         }
     }
 
@@ -115,8 +115,8 @@ pub async fn up(opts: UpOptions) -> u8 {
         let token = opts.admin_token.clone().unwrap_or_else(generate_token);
         match pulsate_net::bind(addr) {
             Ok(listener) => {
-                println!("p8: admin + dashboard on http://{addr}/");
-                println!("p8: admin token: {token}");
+                println!("pulsate: admin + dashboard on http://{addr}/");
+                println!("pulsate: admin token: {token}");
                 let api = Arc::new(AdminApi::new(
                     Arc::clone(&store),
                     Arc::clone(&gateway),
@@ -128,7 +128,7 @@ pub async fn up(opts: UpOptions) -> u8 {
                     listener, api, rx,
                 )));
             }
-            Err(e) => eprintln!("p8: cannot bind admin {addr}: {e}"),
+            Err(e) => eprintln!("pulsate: cannot bind admin {addr}: {e}"),
         }
     }
 
@@ -136,7 +136,7 @@ pub async fn up(opts: UpOptions) -> u8 {
     match pulsate_net::bind(opts.listen) {
         Ok(listener) => {
             println!(
-                "p8: listening on http://{} ({} sites, {} upstreams)",
+                "pulsate: listening on http://{} ({} sites, {} upstreams)",
                 opts.listen,
                 gateway.router.site_count(),
                 gateway.upstreams.len()
@@ -154,7 +154,7 @@ pub async fn up(opts: UpOptions) -> u8 {
             }));
         }
         Err(e) => {
-            eprintln!("p8: cannot bind {}: {e}", opts.listen);
+            eprintln!("pulsate: cannot bind {}: {e}", opts.listen);
             return crate::exit::RUNTIME;
         }
     }
@@ -168,7 +168,7 @@ pub async fn up(opts: UpOptions) -> u8 {
             listener_cfg,
         ) {
             Ok(task) => {
-                println!("p8: listening on https://{}", tls.listen);
+                println!("pulsate: listening on https://{}", tls.listen);
                 tasks.push(task);
             }
             Err(code) => return code,
@@ -178,7 +178,7 @@ pub async fn up(opts: UpOptions) -> u8 {
     for task in tasks {
         let _ = task.await;
     }
-    println!("p8: shutdown complete");
+    println!("pulsate: shutdown complete");
     crate::exit::OK
 }
 
@@ -189,27 +189,27 @@ fn build_tls_listener(
     cfg: ListenerConfig,
 ) -> Result<tokio::task::JoinHandle<()>, u8> {
     let cert_pem = std::fs::read(&tls.cert).map_err(|e| {
-        eprintln!("p8: cannot read cert {}: {e}", tls.cert.display());
+        eprintln!("pulsate: cannot read cert {}: {e}", tls.cert.display());
         crate::exit::RUNTIME
     })?;
     let key_pem = std::fs::read(&tls.key).map_err(|e| {
-        eprintln!("p8: cannot read key {}: {e}", tls.key.display());
+        eprintln!("pulsate: cannot read key {}: {e}", tls.key.display());
         crate::exit::RUNTIME
     })?;
     let ck = pulsate_tls::certified_key_from_pem(&cert_pem, &key_pem).map_err(|e| {
-        eprintln!("p8: {e}");
+        eprintln!("pulsate: {e}");
         crate::exit::RUNTIME
     })?;
     let mut resolver = pulsate_tls::CertResolver::new();
     resolver.set_default(ck);
     let config = pulsate_tls::server_config(resolver).map_err(|e| {
-        eprintln!("p8: {e}");
+        eprintln!("pulsate: {e}");
         crate::exit::RUNTIME
     })?;
     let acceptor = pulsate_tls::acceptor(config);
 
     let listener = pulsate_net::bind(tls.listen).map_err(|e| {
-        eprintln!("p8: cannot bind {}: {e}", tls.listen);
+        eprintln!("pulsate: cannot bind {}: {e}", tls.listen);
         crate::exit::RUNTIME
     })?;
 
@@ -297,7 +297,7 @@ fn spawn_signal_listener(tx: watch::Sender<Lifecycle>) {
         {
             let _ = tokio::signal::ctrl_c().await;
         }
-        eprintln!("p8: draining (grace {:?})", Duration::from_secs(30));
+        eprintln!("pulsate: draining (grace {:?})", Duration::from_secs(30));
         let _ = tx.send(Lifecycle::Draining);
     });
 }

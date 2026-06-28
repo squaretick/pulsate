@@ -174,7 +174,7 @@ fn run_up(args: RunUp) -> ExitCode {
             Some(pulsate_cli::TlsOptions { listen, cert, key })
         }
         _ => {
-            eprintln!("p8: --tls-listen, --cert, and --key must be provided together");
+            eprintln!("pulsate: --tls-listen, --cert, and --key must be provided together");
             return ExitCode::from(64); // usage error (sysexits)
         }
     };
@@ -191,7 +191,7 @@ fn run_up(args: RunUp) -> ExitCode {
     let rt = match pulsate_rt::Runtime::new(None) {
         Ok(rt) => rt,
         Err(e) => {
-            eprintln!("p8: failed to start runtime: {e}");
+            eprintln!("pulsate: failed to start runtime: {e}");
             return ExitCode::from(1);
         }
     };
@@ -215,7 +215,7 @@ fn parse_optional_addr(value: &str, flag: &str) -> Result<Option<SocketAddr>, Ex
     match value.parse::<SocketAddr>() {
         Ok(addr) => Ok(Some(addr)),
         Err(e) => {
-            eprintln!("p8: invalid {flag} address {value:?}: {e}");
+            eprintln!("pulsate: invalid {flag} address {value:?}: {e}");
             Err(ExitCode::from(64))
         }
     }
@@ -245,12 +245,15 @@ fn print_info() {
     println!("  {bin} plugin run <file>    run a WASM plugin");
 }
 
-/// The base name the binary was invoked as, falling back to `p8`.
+/// The base name the binary was invoked as, falling back to `pulsate`.
 fn invoked_name() -> String {
     std::env::args()
         .next()
         .as_deref()
         .map(std::path::Path::new)
         .and_then(std::path::Path::file_stem)
-        .map_or_else(|| "p8".to_string(), |s| s.to_string_lossy().into_owned())
+        .map_or_else(
+            || "pulsate".to_string(),
+            |s| s.to_string_lossy().into_owned(),
+        )
 }

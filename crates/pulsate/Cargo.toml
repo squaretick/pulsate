@@ -1,5 +1,5 @@
 [package]
-name = "p8"
+name = "pulsate"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -7,8 +7,9 @@ license.workspace = true
 repository.workspace = true
 description = "The Pulsate gateway: process entry; wires the control and data planes; owns the supervisor."
 
-# A shared `run()` lives in src/lib.rs; the binaries `p8` (src/main.rs) and
-# `pulsate` (src/bin/pulsate.rs) are thin wrappers, discovered automatically.
+# A shared `run()` lives in src/lib.rs. The primary binary `pulsate`
+# (src/main.rs) and its short alias `p8` (src/bin/p8.rs) are thin wrappers,
+# discovered automatically.
 
 [dependencies]
 pulsate-core = { path = "../pulsate-core", version = "0.1.0" }
