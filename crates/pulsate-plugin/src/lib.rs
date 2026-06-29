@@ -133,9 +133,13 @@ impl PluginHost {
         let mut linker = Linker::new(&self.engine);
         if caps.log {
             linker
-                .func_wrap("pulsate", "log", |mut caller: Caller<'_, HostState>, x: i32| {
-                    caller.data_mut().logs.push(x);
-                })
+                .func_wrap(
+                    "pulsate",
+                    "log",
+                    |mut caller: Caller<'_, HostState>, x: i32| {
+                        caller.data_mut().logs.push(x);
+                    },
+                )
                 .map_err(|e| PluginError::new(Code::PLG_LOAD, format!("linker error: {e}")))?;
         }
 
