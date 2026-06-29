@@ -25,6 +25,9 @@ tokio-stream = { version = "0.1", features = ["net", "sync"] }
 
 [build-dependencies]
 tonic-build = "0.12"
+# Vendored protoc so the build needs no system `protoc` — keeps CI, `cargo
+# install`, and the "one binary, no deps" promise self-contained.
+protoc-bin-vendored = "3"
 
 [dev-dependencies]
 tokio = { workspace = true, features = ["macros", "rt", "rt-multi-thread", "net", "io-util", "time"] }
