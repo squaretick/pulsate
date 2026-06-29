@@ -8,7 +8,7 @@ repository.workspace = true
 description = "Test harness, fakes, conformance utilities."
 
 [dependencies]
-pulsate-core = { path = "../pulsate-core", version = "0.2.1" }
+pulsate-core = { path = "../pulsate-core", version = "0.2.2" }
 
 [lints]
 workspace = true
