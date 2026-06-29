@@ -3,6 +3,8 @@
 [![crates.io](https://img.shields.io/crates/v/pulsate.svg)](https://crates.io/crates/pulsate)
 [![docs.rs](https://img.shields.io/docsrs/pulsate)](https://docs.rs/pulsate)
 [![CI](https://github.com/squaretick/pulsate/actions/workflows/ci.yml/badge.svg)](https://github.com/squaretick/pulsate/actions/workflows/ci.yml)
+[![Rust](https://github.com/h4x0r/stem-branch/actions/workflows/rust.yml/badge.svg)](https://github.com/h4x0r/stem-branch/actions/workflows/rust.yml)
+[![MSRV](https://img.shields.io/badge/rustc-1.86%2B-orange.svg)](https://www.rust-lang.org)
 [![license](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](#license)
 
 A reverse-proxy gateway written in Rust. One static binary, one config file, one
